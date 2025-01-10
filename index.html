@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spin Wheel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+       
+
+        <h1>Khoa Dev - Spin</h1>
+        
+        <!-- Vòng tròn quay -->
+        <div class="spin-box">
+            <div class="spin-number" id="spinNumber">0</div>
+        </div>
+        
+        <!-- Nút Quay -->
+        <button id="spinButton" disabled>Quay</button> 
+
+        <!-- Nhập lượt quay -->
+        <div>
+            <input type="number" id="spinInput" placeholder="Nhập lượt quay" min="1">
+            <button id="addSpinButton">Thêm</button>
+        </div>
+
+        <!-- Hiển thị kết quả -->
+        <div class="result" id="result"></div>
+        <div class="total" id="totalMoney">Tổng tiền: 0</div>
+        <div class="lucky" id="luckyPoints">Lucky: 0</div>
+        <div class="spins-left" id="spinsLeft">Lượt quay còn: 0</div>
+    </div>
+
+    <!-- Pop-up thông báo -->
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <p id="popupMessage"></p>
+            <button id="closePopupButton">Đóng</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+<style>
+
+    /* Pop-up */
+.popup {
+    display: none; /* Ban đầu ẩn */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6); /* Nền tối mờ */
+    justify-content: center;
+    align-items: center;
+    z-index: 999; /* Đảm bảo pop-up nằm trên tất cả các phần tử khác */
+}
+
+.popup-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2); /* Đổ bóng nhẹ cho pop-up */
+    width: 300px;
+    animation: fadeIn 0.5s ease-out; /* Hiệu ứng fade-in */
+}
+
+.popup-content p {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+#closePopupButton {
+    background: #2575fc;
+    color: white;
+    padding: 10px 20px;
+    font-size: 18px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#closePopupButton:hover {
+    background-color: #6a11cb; /* Màu khi hover */
+}
+
+/* Hiệu ứng fade-in cho pop-up */
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+ /* Reset một số style mặc định */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Định dạng tổng thể */
+body {
+    font-family: 'Roboto', sans-serif;
+    background: linear-gradient(45deg, #ff6f61, #ffcc5c, #6b5b95, #feb236);
+    background-size: 600% 600%;
+    animation: gradientBackground 15s ease infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 10px;
+}
+
+/* Hiệu ứng cho nền */
+@keyframes gradientBackground {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Container chính */
+.container {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 100%;
+    max-width: 450px;
+    backdrop-filter: blur(10px);
+}
+
+/* Tiêu đề */
+h1 {
+    font-size: 32px;
+    margin-bottom: 25px;
+    color: rgb(100, 29, 133) ;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Vòng tròn chứa số quay */
+.spin-box {
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(45deg, #ff6f61, #feb236);
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    font-size: 80px;
+    font-weight: bold;
+    color: white;
+    margin: 0 auto;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    animation: rotateAnimation 3s ease infinite;
+}
+
+/* Hiệu ứng vòng tròn quay */
+@keyframes rotateAnimation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Các chữ số trong vòng tròn */
+#spinNumber {
+    font-size: 70px;
+    font-weight: bold;
+}
+
+/* Nút Quay */
+#spinButton {
+    background: linear-gradient(45deg, #6a11cb, #2575fc); /* Gradient từ tím đến xanh dương */
+    color: white;
+    padding: 20px 40px;
+    font-size: 24px;
+    cursor: pointer;
+    border: none;
+    border-radius: 50px; /* Bo tròn hoàn toàn */
+    width: 100%;
+    transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+    margin-top: 30px;
+    box-shadow: 0 8px 15px rgba(38, 50, 56, 0.3); /* Hiệu ứng đổ bóng cho nút */
+}
+
+#spinButton:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#spinButton:hover:not(:disabled) {
+    transform: scale(1.1);
+    background: linear-gradient(45deg, #2575fc, #6a11cb); /* Đảo ngược gradient khi hover */
+    box-shadow: 0 10px 20px rgba(38, 50, 56, 0.5); /* Tăng cường hiệu ứng đổ bóng khi hover */
+}
+
+
+/* Nút Thêm Lượt Quay */
+#addSpinButton {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+    padding: 18px 30px;
+    font-size: 22px;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    width: 80%;
+    margin-top: 15px;
+    transition: transform 0.3s, background 0.3s;
+}
+
+#addSpinButton:hover {
+    transform: scale(1.1);
+    background: linear-gradient(45deg, #0056b3, #007bff);
+}
+
+/* Input và các chữ thông báo */
+input[type="number"] {
+    padding: 15px;
+    font-size: 24px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    width: 80%;
+    margin-top: 20px;
+    text-align: center;
+    transition: border-color 0.3s;
+}
+
+input[type="number"]:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+/* Các phần chữ có khung bo tròn */
+.result, .total, .lucky, .spins-left {
+    margin-top: 30px;
+    font-size: 28px;
+    color: #fff; /* Màu chữ trắng để nổi bật */
+    background: rgba(0, 0, 0, 0.5); /* Màu nền đậm nhẹ để tạo sự tương phản */
+    padding: 15px 25px; /* Tạo khoảng cách giữa chữ và viền */
+    border-radius: 12px; /* Bo tròn các góc */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5); /* Đổ bóng nhẹ cho chữ */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Thêm hiệu ứng đổ bóng cho các phần chữ */
+    transition: transform 0.3s, background 0.3s; /* Thêm hiệu ứng khi hover */
+}
+
+.result {
+    font-size: 32px;
+    font-weight: bold;
+    background: rgba(255, 99, 71, 0.8); /* Màu nền đỏ cam cho kết quả */
+}
+
+.total, .lucky, .spins-left {
+    font-size: 26px;
+    background: rgba(0, 123, 255, 0.8); /* Màu nền xanh dương cho tổng tiền và lucky */
+}
+
+/* Hiệu ứng hover cho các phần chữ */
+.result:hover, .total:hover, .lucky:hover, .spins-left:hover {
+    transform: scale(1.05);
+    background: rgba(255, 99, 71, 1); /* Đổi màu nền khi hover cho kết quả */
+}
+
+/* Đặc biệt, phần "Lượt quay còn" có màu đỏ để thu hút */
+.spins-left {
+    background: rgba(255, 69, 58, 0.8); /* Màu nền đỏ cho lượt quay còn lại */
+}
+
+.spins-left:hover {
+    background: rgba(255, 69, 58, 1); /* Đổi màu nền khi hover cho lượt quay còn lại */
+}
+
+
+</style>
+<script>
+let totalMoney = 0; // Biến lưu trữ tổng tiền
+let lucky = 0; // Biến lưu trữ điểm Lucky
+let spinsLeft = 0; // Biến lưu trữ số lượt quay còn lại
+
+document.getElementById("addSpinButton").addEventListener("click", function() {
+    // Lấy giá trị từ input
+    let spinsInput = document.getElementById("spinInput").value;
+
+    // Kiểm tra nếu giá trị nhập hợp lệ
+    if (spinsInput && spinsInput > 0) {
+        spinsLeft = parseInt(spinsInput);
+        document.getElementById("spinsLeft").innerText = "Lượt quay còn: " + spinsLeft;
+        document.getElementById("spinButton").disabled = false; // Bật nút Quay
+    } else {
+        alert("Vui lòng nhập số lượt quay hợp lệ!");
+    }
+});
+
+document.getElementById("spinButton").addEventListener("click", function() {
+    // Kiểm tra nếu còn lượt quay
+    if (spinsLeft <= 0) {
+        document.getElementById("spinsLeft").innerText = "Hết lượt quay";
+        document.getElementById("spinButton").disabled = true; // Tắt nút Quay
+        return;
+    }
+
+    // Giảm số lượt quay còn lại
+    spinsLeft--;
+    document.getElementById("spinsLeft").innerText = "Lượt quay còn: " + spinsLeft;
+
+    // Mảng các số và tỉ lệ tương ứng
+    const numbers = [0, 1, 2, 5, 10, 20, 50, 100, 200, 500];
+    const probabilities = [60, 10, 5, 6, 4, 90, 90, 90, 90, 90]; // Các tỷ lệ phần trăm tùy chỉnh của bạn
+
+    // Tính tổng tất cả các tỉ lệ phần trăm
+    const totalProbability = probabilities.reduce((acc, prob) => acc + prob, 0);
+
+    // Cộng thêm 15 điểm Lucky mỗi lần bấm quay
+    lucky += 7;
+    document.getElementById("luckyPoints").innerText = "Lucky: " + lucky + "%";
+
+    // Nếu đạt 100 Lucky, kết quả sẽ luôn là "5"
+    if (lucky >= 100) {
+        document.getElementById("result").innerText = "Kết quả: 5";
+        totalMoney += 5; // Cộng thêm 5 vào tổng tiền
+        document.getElementById("totalMoney").innerText = "Tổng tiền: " + totalMoney;
+        lucky = 0; // Đặt lại điểm Lucky về 0 sau khi nhận được kết quả đặc biệt
+        showPopup("Bạn trúng 5!");
+        return; // Dừng lại không quay nữa, luôn nhận kết quả là "5"
+    }
+
+    // Sinh ra một số ngẫu nhiên trong phạm vi 0 đến tổng tỉ lệ
+    let randomNumber = Math.random() * totalProbability;
+    let selectedNumber = null;
+    let accumulatedProbability = 0;
+
+    // Tìm ra số được chọn dựa trên tỷ lệ
+    for (let i = 0; i < numbers.length; i++) {
+        accumulatedProbability += probabilities[i];
+        if (randomNumber < accumulatedProbability) {
+            selectedNumber = numbers[i];
+            break;
+        }
+    }
+
+    // Thay đổi số liên tục trong vòng 3 giây
+    let spinBox = document.getElementById("spinNumber");
+    let iterations = 30; // Số lần thay đổi số
+    let currentIteration = 0;
+
+    let interval = setInterval(() => {
+        let randomIndex = Math.floor(Math.random() * numbers.length);
+        spinBox.innerText = numbers[randomIndex];
+        currentIteration++;
+
+        if (currentIteration >= iterations) {
+            clearInterval(interval);
+            spinBox.innerText = selectedNumber;
+            document.getElementById("result").innerText = "Kết quả: " + selectedNumber;
+
+            // Cộng dồn tổng tiền với số trúng được
+            totalMoney += selectedNumber;
+            document.getElementById("totalMoney").innerText = "Tổng tiền: " + totalMoney + " ,000 VNĐ";
+            
+            // Hiển thị pop-up
+            showPopup("Nhận " + selectedNumber + ",000 VNĐ");
+        }
+    }, 100); // Cập nhật mỗi 100ms
+});
+
+// Hàm hiển thị pop-up với thông báo
+function showPopup(message) {
+    document.getElementById("popupMessage").innerText = message; // Cập nhật thông báo
+    document.getElementById("popup").style.display = "flex"; // Hiển thị pop-up
+}
+
+// Xử lý khi bấm nút Đóng pop-up
+document.getElementById("closePopupButton").addEventListener("click", function() {
+    document.getElementById("popup").style.display = "none"; // Ẩn pop-up
+});
+
+</script> 
