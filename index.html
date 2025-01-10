@@ -335,10 +335,10 @@ document.getElementById("spinButton").addEventListener("click", function() {
     // Nếu đạt 100 Lucky, kết quả sẽ luôn là "5"
     if (lucky >= 100) {
         document.getElementById("result").innerText = "Kết quả: 5";
-        totalMoney += 5; // Cộng thêm 5 vào tổng tiền
-        document.getElementById("totalMoney").innerText = "Tổng tiền: " + totalMoney;
+        totalMoney += 3; // Cộng thêm 5 vào tổng tiền
+        document.getElementById("totalMoney").innerText = "Tổng tiền: " + totalMoney + " ,000 VNĐ" ;
         lucky = 0; // Đặt lại điểm Lucky về 0 sau khi nhận được kết quả đặc biệt
-        showPopup("Bạn trúng 5!");
+        showPopup("Bạn trúng 3,000 VNĐ!");
         return; // Dừng lại không quay nữa, luôn nhận kết quả là "5"
     }
 
